@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
+
 <div class="landing-prod rounded-5 p-5 mt-5">
     <a href="{{ route('products') }}"><i class="fa-solid fa-arrow-left fa-2x" style="color:#FEFDDF;"></i></a>
     <div class="row justify-content-center gx-3 gy-4">
@@ -15,7 +16,7 @@
         </div>
         <div class="col-auto">
             <div class="product-item text-center">
-                <a href="#" class="product-link">
+                <a href="{{ route('extensions') }}" class="product-link">
                     <img src="{{ asset('img/extension.png') }}" 
                         class="product-img img-fluid">
                 </a>
@@ -24,7 +25,7 @@
         </div>
         <div class="col-auto">
             <div class="product-item text-center">
-                <a href="{{ route('extensions') }}" class="product-link">
+                <a href="{{ route('drink') }}" class="product-link">
                     <img src="{{ asset('img/pict.png') }}" 
                         class="product-img img-fluid">
                 </a>

@@ -8,15 +8,16 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.css">
-    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <title>Warung Ibu Ida</title>
     @vite(['resources/css/app.css'])
 </head>
 
-<body>
-    <ul id="nav" class="navigation nav p-4 justify-content-between sticky-top">
+<body style="background-color: #FDFBEE" class="p-3">
+    <ul id="nav" class="navigation nav rounded-pill p-3 px-5 mt-3 shadow-lg justify-content-between sticky-top">
         <div class="d-flex mt-2">
             <li class="nav-item">
-                <h3 class="title-nav">Warung Ibu Ida.</h3>
+                <h3 class="title-nav" style="color: #7f2020; font-family: 'Dancing Script', cursive;">Warung Ibu Ida.</h3>
             </li>
         </div>
         <div class="d-flex mt-2">
@@ -32,13 +33,27 @@
         <div class="d-flex mt-2">
             @if (auth()->check() && auth()->user()->role === 'user')
                 <li class="nav-item">
-                    <a class="nav text-decoration-none" style="color: #7F2020" href="#"><i class="fa-solid fa-cart-shopping fa-2x mx-2"></i></a>
+                    <a href="{{ route('cart') }}" class="nav text-decoration-none position-relative" class="btn btn-primary" style="color: #7F2020" ><i class="fa-solid fa-cart-shopping fa-2x mx-2"></i>
+                        @if ($cartCount > 0)
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ $cartCount }}
+                                <span class="visually-hidden">unread messages</span>
+                            </span>
+                        @endif
+                    </a>
                 </li>
             @endif
-             @if (Auth::check())
+            @if (Auth::check())
                 @if (auth()->user()->role === 'admin')
                     <li class="nav-item">
-                        <a class="nav text-decoration-none" style="color: #7F2020" href="#"><i class="fa-solid fa-bell fa-2x"></i></a>
+                        <a class="nav text-decoration-none position-relative" style="color: #7F2020" href="#"><i class="fa-solid fa-bell fa-2x"></i>
+                            @if ($newOrderCount > 0)
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    {{ $newOrderCount }}
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                            @endif
+                        </a>
                     </li>
                 @endif
                 <div class="dropdown dropup nav-item">
@@ -73,6 +88,7 @@
     <main>
         @yield('content')
     </main>
+
     
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
@@ -82,5 +98,17 @@
             $('#myTable').DataTable();
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if(session('success'))
+        <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!!',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#7F2020',
+            confirmButtonText: 'OK'
+        });
+        </script>
+    @endif
 </body>
 </html>

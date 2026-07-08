@@ -5,24 +5,39 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ProductsController extends Controller
 {
     public function ProductsIndex(){
         $category = ProductCategory::all();
-        $products = Product::all();
+        if(Auth::check() && Auth::user()->role === 'admin'){
+            $products = Product::orderBy('id_product','asc')->paginate(15);
+        }else{
+            $products = Product::orderBy('created_at','desc')->paginate(10);
+        }
         return view('products', compact('category', 'products'));
     }
 
     public function primary(){
-        $products = Product::where('id_category', '=', 'CAT001', 'and')->get();
+        $products = Product::where('id_category', '=', 'CAT001', 'and')->paginate(8);
         return view('primary', compact('products'));
     }
 
     public function snack(){
-        $products = Product::where('id_category', '=', 'CAT002', 'and')->get();
+        $products = Product::where('id_category', '=', 'CAT002', 'and')->paginate(8);
         return view('snack', compact('products'));
+    }
+
+    public function extensions(){
+        $products = Product::where('id_category', '=', 'CAT003', 'and')->paginate(8);
+        return view('extensions', compact('products'));
+    }
+
+    public function drink(){
+        $products = Product::where('id_category', '=', 'CAT004', 'and')->paginate(8);
+        return view('drink', compact('products'));
     }
 
     public function store(Request $request){
@@ -54,7 +69,7 @@ class ProductsController extends Controller
     }
 
     public function update(Request $request, $idProduct){
-        $product = Product::where('id_product', $idProduct)->first();
+        $product = Product::where('id_product', '=', $idProduct, 'and')->firstOrFail();
         $request->validate([
             'name_product' => 'required',
             'id_category' => 'required',
@@ -82,5 +97,14 @@ class ProductsController extends Controller
         ]);
         return redirect()->back()
             ->with('success','Product successfully updated');
+    }
+
+    public function destroy($idProduct){
+        $product = Product::where('id_product', '=', $idProduct, 'and')->firstOrFail();
+        if($product->image_product){
+            Storage::disk('public')->delete('products/'.$product->image_product);
+        }
+        $product->delete();
+        return redirect()->back()->with('success', 'Deleted Success');
     }
 }

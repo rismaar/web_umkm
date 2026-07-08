@@ -15,7 +15,7 @@
         </div>
         <div class="col-auto">
             <div class="product-item text-center">
-                <a href="#" class="product-link">
+                <a href="{{ route('extensions') }}" class="product-link">
                     <img src="{{ asset('img/extension.png') }}" 
                         class="product-img img-fluid">
                 </a>
@@ -24,7 +24,7 @@
         </div>
         <div class="col-auto">
             <div class="product-item text-center">
-                <a href="{{ route('extensions') }}" class="product-link">
+                <a href="{{ route('drink') }}" class="product-link">
                     <img src="{{ asset('img/pict.png') }}" 
                         class="product-img img-fluid">
                 </a>
@@ -141,7 +141,7 @@
                     @endif
                 </ul>
             </nav>
-        @endif
+        @endif  
     </div>
 </div>
 
