@@ -137,7 +137,7 @@
             <div class="modal-footer">
                 <form action="{{ route('checkout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="btn btn-lg w-100 mt-4 fw-bold" style="background:#7F2020;color:#E6F082">
+                    <button type="submit" class="btn btn-lg w-100 mt-4 " style="background:#7F2020;color:#E6F082">
                         <i class="fa-solid fa-credit-card me-2"></i>
                         Proceed to Payment
                     </button>

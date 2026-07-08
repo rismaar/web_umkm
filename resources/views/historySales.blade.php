@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container bg-light p-5 rounded-5 mt-5">
+<div class="container mx-auto mt-5">
     @if($sales->isEmpty())
         <div class="text-center mt-5 align-items-center justify-content-center">
             <i class="fa-solid fa-box-open fa-5x text-secondary mb-3"></i>
@@ -83,8 +83,8 @@
                                 @case('Completed')
                                     <span class="badge bg-primary">Completed</span>
                                     @break
-                                @case('Canceled')
-                                    <span class="badge bg-danger">Canceled</span>
+                                @case('Cancelled')
+                                    <span class="badge bg-danger">Cancelled</span>
                                     @break
                             @endswitch
                         @endif
@@ -96,7 +96,7 @@
                         data-bs-target="#detailModal{{ $sale->id_sale }}">
                             <i class="fa-solid fa-eye me-2"></i> Detail
                         </a>
-                        @if($sale->status == 'Processing')
+                        @if(Auth::check() && Auth::user()->role === 'user' && $sale->status == 'Processing')
                             <form action="{{ route('received', $sale->id_sale) }}"
                                 method="POST"
                                 class="d-inline">
@@ -114,50 +114,107 @@
         </div>
 
         <div class="modal fade" id="detailModal{{ $sale->id_sale }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg">
-                    <div class="modal-content p-4">
-                        <div class="modal-header">
-                            <h1 class="modal-title fw-bold fs-5" id="staticBackdropLabel">{{$sale->invoice}}</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content p-4">
+                    <div class="modal-header">
+                        <h1 class="modal-title fw-bold fs-5" id="staticBackdropLabel">{{$sale->invoice}}</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="d-flex justify-content-between">
                             <h6>Transaction Date: {{ $sale->created_at->format('d M Y') }}</h6>
-                            @foreach ($sale->details as $detail)
-                                <div class="card shadow-sm border-0 rounded-4 mb-4">
-                                    <div class="card-body">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-3">
-                                                {{ $detail->product->name_product }}
+                            <div>
+                                @switch($sale->status)
+                                    @case('Pending')
+                                        <span class="badge bg-secondary">Pending</span>
+                                        @break
+                                    @case('Processing')
+                                        <span class="badge bg-warning text-dark">Processing</span>
+                                        @break
+                                    @case('Completed')
+                                        <span class="badge bg-primary">Completed</span>
+                                        @break
+                                    @case('Cancelled')
+                                        <span class="badge bg-danger">Cancelled</span>
+                                        @break
+                                @endswitch
+                            </div>
+                        </div>
+                        @foreach ($sale->details as $detail)
+                            <div class="card shadow-sm border-0 rounded-4 mb-4">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-3">
+                                            {{ $detail->product->name_product }}
+                                        </div>
+                                        <div class="col-md-5">
+                                            <h5>
+                                                Rp {{ number_format($detail->product->price_product, 0, ',', '.') }}
+                                            </h5>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                {{ $detail->qty }}
                                             </div>
-                                            <div class="col-md-5">
-                                                <h5>
-                                                    Rp {{ number_format($detail->product->price_product, 0, ',', '.') }}
-                                                </h5>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="d-flex align-items-center justify-content-center">
-                                                    {{ $detail->qty }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2 text-end">
-                                                <h5>
-                                                    Rp {{ number_format($detail->product->price_product * $detail->qty, 0, ',', '.') }}
-                                                </h5>
-                                            </div>
+                                        </div>
+                                        <div class="col-md-2 text-end">
+                                            <h5>
+                                                Rp {{ number_format($detail->product->price_product * $detail->qty, 0, ',', '.') }}
+                                            </h5>
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach
-                        </div>
-                        <div class="modal-footer">
-                            <h5 class="fw-bold">
-                                Total: Rp {{ number_format($sale->total_price, 0, ',', '.') }}
-                            </h5>
-                        </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="modal-footer">
+                        <h5 class="fw-bold">
+                            Total: Rp {{ number_format($sale->total_price, 0, ',', '.') }}
+                        </h5>
                     </div>
                 </div>
             </div>
+        </div>
         @endforeach
+    @endif
+
+    @if ($sales->count() > 0)
+        <nav aria-label="Page navigation example" class="mt-5">
+            <ul class="pagination justify-content-center">
+                @if ($sales->onFirstPage())
+                    <li class="page-item disabled">
+                        <a class="page-link">&laquo;</a>
+                    </li>
+                @else
+                    <li class="page-item">
+                        <a class="page-link text-danger" href="{{ $sales->previousPageUrl() }}">
+                            &laquo;
+                        </a>
+                    </li>
+                @endif
+                @for ($i = 1; $i <= $sales->lastPage(); $i++)
+                        <li class="page-item {{ $sales->currentPage() == $i ? 'active' : '' }}">
+                            <a class="page-link
+                                {{ $sales->currentPage() == $i ? 'bg-warning border-warning text-white' : 'text-danger' }}"
+                                href="{{ $sales->url($i) }}">
+                                {{ $i }}
+                            </a>
+                        </li>
+                    @endfor
+                @if ($sales->hasMorePages())
+                    <li class="page-item">
+                        <a class="page-link text-danger" 
+                        href="{{ $sales->nextPageUrl() }}">
+                            &raquo;
+                        </a>
+                    </li>
+                @else
+                    <li class="page-item disabled">
+                        <a class="page-link">&raquo;</a>
+                    </li>
+                @endif
+            </ul>
+        </nav>
     @endif
 </div>
 

@@ -8,17 +8,18 @@ use App\Models\cart;
 use App\Models\cartItem;
 use App\Models\Sale;
 use App\Models\SaleDetails;
+use App\Models\Product;
 
 class SaleController extends Controller
 {
     public function checkout(){
         $cart = cart::where('id_user', Auth::id())->first();
         if (!$cart) {
-            return back()->with('error', 'Cart kosong.');
+            return back()->with('error', 'Cart is empty');
         }
         $items =cartItem::with('product')->where('id_cart', $cart->id_cart)->get();
         if ($items->isEmpty()) {
-            return back()->with('error', 'Cart kosong.');
+            return back()->with('error', 'Cart is empty');
         }
         $idSale = 'SL' . str_pad((Sale::count() + 1), 3, '0', STR_PAD_LEFT);
         $invoice = 'INV-' . now()->format('YmdHis');
@@ -41,6 +42,9 @@ class SaleController extends Controller
                 'price'       => $item->price,
                 'subtotal'    => $item->qty * $item->price
             ]);
+            $product = Product::findOrFail($item->id_product);
+            $product->stock_product -= $item->qty;
+            $product->save();
         }
         cartItem::where('id_cart', $cart->id_cart)->delete();
         return redirect()->route('historySales')->with('success','Checkout berhasil.');
@@ -51,12 +55,12 @@ class SaleController extends Controller
             $sales = Sale::with(['user', 'details.product'])
                 ->whereIn('status', ['Pending', 'Processing'])
                 ->latest()
-                ->paginate(10);
+                ->paginate(5);
         } else {
             $sales = Sale::with(['details.product'])
                 ->where('id_user', Auth::id())
                 ->latest()
-                ->paginate(10);
+                ->paginate(5);
         }
         return view('historySales', compact('sales'));
     }
@@ -76,7 +80,7 @@ class SaleController extends Controller
             $sales = Sale::with(['user','details.product'])
                 ->whereIn('status', ['Completed','Cancelled'])
                 ->latest()
-                ->paginate(10);
+                ->paginate(5);
         } else {
             $sales = Sale::with(['details.product'])
                 ->where('id_user', Auth::id())

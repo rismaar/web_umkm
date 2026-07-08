@@ -10,7 +10,7 @@ class IndexController extends Controller
 {
     public function index(){
         $category = ProductCategory::all();
-        $sale = Sale::where('status', 'Completed')->latest()->take(5)->get();
+        $sale = Sale::where('status', 'Completed')->latest()->take(4)->get();
         return view('index', compact('category', 'sale'));
     }
 }

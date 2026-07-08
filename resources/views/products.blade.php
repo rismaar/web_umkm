@@ -138,10 +138,13 @@
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
-                            <h3 class="card-title fw-bold" >{{$pr->name_product}}</h3>
+                            <h3 class="card-title fw-bold text-truncate" >{{$pr->name_product}}</h3>
                             <h6 class="fw-bold text-white rounded-pill px-3 py-2" style="background-color: #7f2020">Rp. {{number_format($pr->price_product, 0, ',', '.')}}</h6>
                         </div>
                         <p class="fw-bold">{{$pr->description}}</p>
+                        @if(Auth::check() && (Auth::user()->role === 'admin'))
+                            <p class="fw-bold">Stock: {{$pr->stock_product}}</p>
+                        @endif
                         <div class="d-flex">
                             @if (Auth::check() && (Auth::user()->role === 'admin'))
                                 <button type="button" class="btn me-3" style="background-color: #FFFAF3; color:#7f2020" data-bs-toggle="modal" data-bs-target="#edit{{ $pr->id_product }}"><i class="fa-solid fa-arrows-rotate"></i></button>
