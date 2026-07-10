@@ -15,7 +15,7 @@
         </div>
         <div class="col-auto">
             <div class="product-item text-center">
-                <a href="#" class="product-link">
+                <a href="{{ route('extensions') }}" class="product-link">
                     <img src="{{ asset('img/extension.png') }}" 
                         class="product-img img-fluid">
                 </a>
@@ -24,7 +24,7 @@
         </div>
         <div class="col-auto">
             <div class="product-item text-center">
-                <a href="{{ route('extensions') }}" class="product-link">
+                <a href="{{ route('drink') }}" class="product-link">
                     <img src="{{ asset('img/pict.png') }}" 
                         class="product-img img-fluid">
                 </a>
@@ -53,14 +53,18 @@
     <div class="row justify-content-center">
         @foreach ($products as $pr)
             <div class="col-12 col-md-4 mt-5 col-lg-3">
-                <div class="card card-prod rounded-5 p-2 h-70">
-                    <div class="img-prod" >
-                        <img src="{{  Storage::url('products/'.$pr->image_product) }}" class="img-set rounded-5 card-img-top shadow-lg">
+                <div class="card card-prod p-2 h-70" @if ((Auth::check() && Auth::user()->role === 'user'))
+                                                        style="border-radius: 25px 25px 100px 100px;"
+                                                     @else
+                                                        style="border-radius: 35px; cursor: pointer;"
+                                                     @endif>
+                    <div class="img-prod bg-white rounded-5 p-4" >
+                        <img src="{{  Storage::url('products/'.$pr->image_product) }}" class="img-set rounded-5 card-img-top">
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <h3 class="card-title fw-bold" >{{$pr->name_product}}</h3>
-                            <h6 class="fw-bold text-white rounded-pill px-3 py-2" style="background-color: #7f2020">Rp. {{number_format($pr->price_product, 0, ',', '.')}}</h6>
+                            <h6 class="fw-bold text-white rounded-pill px-3 py-2" style="background-color: #717f20">Rp {{number_format($pr->price_product, 0, ',', '.')}}</h6>
                         </div>
                         <p class="fw-bold">{{$pr->description}}</p>
                         <div class="d-flex">
@@ -73,7 +77,7 @@
                             @if (Auth::check() && (Auth::user()->role === 'user'))
                                 <form action="{{ route('addtoCart', ['idProduct' => $pr->id_product]) }}" method="POST" class="w-100">
                                     @csrf
-                                    <button type="submit" class="btn w-100 rounded-5 text-white p-3 fw-bold" style="background-color: #7f2020">Add to Cart<i class="fa-solid fa-cart-shopping mx-2"></i></button>
+                                    <button type="submit" class="btn w-100 text-white py-3 fw-bold" style="background-color: #717f20; border-radius: 0px 0px 100px 100px; transition:cubic-bezier(1, 0, 0, 1)"><i class="fa-solid fa-plus fa-lg"></i></button>
                                 </form>
                             @endif
                         </div>

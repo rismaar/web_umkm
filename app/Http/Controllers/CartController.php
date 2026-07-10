@@ -60,4 +60,14 @@ class CartController extends Controller
         $item->delete();
         return back();
     }
+
+    public function saveAddress(Request $request){
+        $request->validate([
+            'address' => 'required|string|max:255',
+        ]);
+        Auth::user()->update([
+            'address' => $request->address,
+        ]);
+        return back()->with('success', 'Address saved successfully.');
+    }
 }

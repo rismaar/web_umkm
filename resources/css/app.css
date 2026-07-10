@@ -41,19 +41,19 @@
     scroll-margin-top: 80px;
 }
 .title-prod{
-    font-size: 5rem;
+    font-size: 3rem;
     font-weight: bold;
     color: #FBF5A7;
     font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 .img-prod{
     width: 100%;
+    object-fit: cover;
     align-items: center;
 }
 .card-prod{
     background-color: #FBF5A7;
     border: none;
-    border-radius: 20px;
 }
 .img-set{
     width: 100%;

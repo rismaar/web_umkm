@@ -21,6 +21,7 @@ Route::get('/regist', function () {
 Route::post('/saveregist', [AuthController::class, 'saveregist'])->name('saveregist');
 Route::post('/savelogin', [AuthController::class, 'savelogin'])->name('savelogin');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/saveAddress', [CartController::class, 'saveAddress'])->name('saveAddress');
 
 Route::get('/products', [ProductsController::class, 'ProductsIndex'])->name('products');
 Route::post('/store', [ProductsController::class, 'store'])->name('storeProduct');

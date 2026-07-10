@@ -1,9 +1,42 @@
 @extends('layouts.app')
 @section('content')
 
-<a href="{{ route('historySales') }}" class="btn mb-2 mt-5 mx-5 rounded-pill" style="background:#7F2020;color:#E6F082">
-    <i class="fa-solid fa-arrow-left"></i> View Order History
-</a>
+<div class="container mt-5">
+    <div class="row mb-4 align-items-start">
+        <div class="col-md-4">
+            <a href="{{ route('historySales') }}"
+                class="btn rounded-pill"
+                style="background:#7F2020;color:#E6F082;">
+                <span class="rounded-circle d-inline-flex justify-content-center align-items-center me-2"
+                    style="width:35px;height:35px;background:#bddd09;">
+                    <i class="fa-solid fa-arrow-left text-white"></i>
+                </span>
+                View Order History
+            </a>
+        </div>
+        <div class="col-md-8">
+            @if(empty(auth()->user()->address))
+                <div class="card shadow border-0">
+                    <div class="card-body">
+                        <h5 class="fw-bold">Shipping Address</h5>
+                        <form action="{{ route('saveAddress') }}" method="POST">
+                            @csrf
+                            <textarea
+                                class="form-control mb-3"
+                                name="address"
+                                rows="4"
+                                placeholder="Enter your complete address first..."
+                                required></textarea>
+                            <button class="btn btn-success" style="background:#7F2020;color:#E6F082">
+                                Save Address
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
+</div>
 
 @if ($items->isEmpty())
     <div class="d-flex justify-content-center align-items-center p-3 mt-5" style="height: 70vh">
@@ -14,7 +47,7 @@
     </div>
 @endif
 
-<div class="container py-5 mt-3">
+<div class="container w-100 py-5">
     <div class="row">
         <div class="col-lg-8">
             @php
@@ -135,13 +168,21 @@
                 <img src="{{ asset('img/qr.jpeg') }}" class="align-items-center" alt="QR Code" style="width: 100%; height: auto; object-fit: cover;">
             </div>
             <div class="modal-footer">
-                <form action="{{ route('checkout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-lg w-100 mt-4 " style="background:#7F2020;color:#E6F082">
-                        <i class="fa-solid fa-credit-card me-2"></i>
-                        Proceed to Payment
+                @if(empty(auth()->user()->address))
+                    <button
+                        class="btn btn-secondary w-100 rounded-pill"
+                        disabled>
+                        Please fill in your shipping address first
                     </button>
-                </form>
+                    @else
+                    <form action="{{ route('checkout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-lg w-100 mt-4 " style="background:#7F2020;color:#E6F082">
+                            <i class="fa-solid fa-credit-card me-2"></i>
+                            Proceed to Payment
+                        </button>
+                    </form>
+                @endif
             </div>
         </div>
     </div>

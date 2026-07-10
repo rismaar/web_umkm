@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\cartItem;
 
 class cart extends Model
 {
@@ -11,6 +12,6 @@ class cart extends Model
     protected $primaryKey = 'id_cart';
     protected $fillable = ['id_user'];
     public function item(){
-        return $this->hasMany(cartItem::class, 'id_cart');
+        return $this->hasMany(cartItem::class, 'id_cart', 'id_cart');
     }
 }

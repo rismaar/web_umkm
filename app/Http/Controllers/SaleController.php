@@ -13,6 +13,10 @@ use App\Models\Product;
 class SaleController extends Controller
 {
     public function checkout(){
+        if (empty(Auth::user()->address)) {
+            return back()->with('error', 'Please fill in your shipping address first.');
+        }
+        
         $cart = cart::where('id_user', Auth::id())->first();
         if (!$cart) {
             return back()->with('error', 'Cart is empty');

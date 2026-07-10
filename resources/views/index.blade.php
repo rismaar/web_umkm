@@ -3,9 +3,8 @@
 
 
 @guest
-    <div class="landing-bann row align-items-center" id="ScrollspyHome">
-        
-        <h1 class="title text-center mt-5" style="font-family: 'Dancing Script', cursive;">Warung Ibu Ida.</h1>
+    <div class="landing-bann row align-items-center">
+            <h1 class="title text-center mt-5" style="font-family: 'Dancing Script', cursive;">Warung Ibu Ida.</h1>  
     </div>    
 @endguest
 
@@ -111,84 +110,112 @@
 @endif
 
 <div class="products rounded-5 p-5 mt-5" id="ScrollspyProducts">
-    @if (!Auth::check() || (Auth::check() && auth()->user()->role === 'user'))
-        <h2 class="title-prod text-center mb-5" style="font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-size: 3rem">
-            Product Best Seller
-        </h2>
-        <div class="row justify-content-center g-4">
-
-            <div class="col-12 col-md-6 col-lg-3">
-                <div class="card-prod card p-4 h-100">
-
-                    <div class="img-prod rounded-3 p-2" style="background-color:#FEFDDF">
-                        <img src="{{ asset('img/pict3.png') }}"
-                            class="img-set card-img-top">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            Card title
-                        </h5>
-                        <p class="card-text">
-                            Some quick example text.
-                        </p>
-                        <div class="d-flex justify-content-end">
-                            <a href="#" class="btn direct">
-                                <i class="fa-solid fa-angle-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-3">
-                <div class="card-prod card p-4 h-100">
-                    <div class="img-prod rounded-3 p-2" style="background-color:#FEFDDF">
-                        <img src="{{ asset('img/pict2.png') }}"
-                            class="img-set card-img-top">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            Card title
-                        </h5>
-                        <p class="card-text">
-                            Some quick example text.
-                        </p>
-                        <div class="d-flex justify-content-end">
-                            <a href="#" class="btn direct">
-                                <i class="fa-solid fa-angle-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-3">
-                <div class="card-prod card p-4 h-100">
-                    <div class="img-prod rounded-3 p-2" style="background-color:#FEFDDF">
-                        <img src="{{ asset('img/pict4.png') }}"
-                            class="img-set card-img-top">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            Card title
-                        </h5>
-                        <p class="card-text">
-                            Some quick example text.
-                        </p>
-                        <div class="d-flex justify-content-end">
-                            <a href="#" class="btn direct">
-                                <i class="fa-solid fa-angle-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex justify-content-center mt-5">
+    @if (!Auth::check())
+        <div class="d-flex justify-content-between">
+            <h2 class="title-prod text-center" style="font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-size: 2rem">
+                Weekly best selling items
+            </h2>
             <a href="{{ route('products') }}"
-            class="btn-prod rounded-pill fw-bold p-3">
-                View Menus <i class="fa-solid fa-angle-right fa-lg"></i>
+                class="btn bg-white rounded-pill fw-bold text-decoration-none d-inline-flex align-items-center gap-2 px-4"
+                style="font-size:1rem; color:#7F2020;">
+                    See More
+                    <span class="rounded-circle d-flex justify-content-center align-items-center"
+                        style="width:35px; height:35px; background-color: #bddd09da">
+                        <i class="fa-solid fa-arrow-right text-white mt-1"></i>
+                    </span>
             </a>
         </div>
-    @else
+        
+        <div class="row justify-content-center g-4">
+            @foreach ($bestProducts as $pr)
+                <div class="col-12 col-md-4 mt-5 col-lg-3">
+                    <div class="card card-prod p-2 rounded-5 h-70">
+                        <div class="img-prod bg-white rounded-5 p-3" >
+                            <img src="{{  Storage::url('products/'.$pr->image_product) }}" class="img-set rounded-5 card-img-top">
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h3 class="card-title fw-bold text-truncate" >{{$pr->name_product}}</h3>
+                                <div class="ms-3">
+                                    <h6 class="fw-bold text-white rounded-pill px-3 py-2" style="background-color: #717f20">Rp. {{number_format($pr->price_product, 0, ',', '.')}}</h6>
+                                </div>
+                            </div>
+                            <p class="fw-bold">{{$pr->description}}</p>
+                            @if(Auth::check() && (Auth::user()->role === 'admin'))
+                                <p class="fw-bold">Stock: {{$pr->stock_product}}</p>
+                            @endif
+                            <div class="d-flex">
+                                @if (Auth::check() && (Auth::user()->role === 'admin'))
+                                    <button type="button" class="btn me-3" style="background-color: #FFFAF3; color:#7f2020" data-bs-toggle="modal" data-bs-target="#edit{{ $pr->id_product }}"><i class="fa-solid fa-arrows-rotate"></i></button>
+                                    <a href="#" class="btn btn-danger me-3" data-bs-toggle="modal" data-bs-target="#confirmDelete{{ $pr->id_product }}">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </a>
+                                @endif
+                            </div>
+                            @if (Auth::check() && (Auth::user()->role === 'user'))
+                                <form action="{{ route('addtoCart', ['idProduct' => $pr->id_product]) }}" method="POST" class="w-100">
+                                    @csrf
+                                    <button type="submit" class="btn w-100 text-white py-3 fw-bold" style="background-color: #717f20; border-radius: 0px 0px 100px 100px; transition:cubic-bezier(1, 0, 0, 1)"><i class="fa-solid fa-plus fa-lg"></i></button>
+                                </form>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @elseif ((Auth::check() && auth()->user()->role === 'user'))
+        <div class="d-flex justify-content-between">
+            <h2 class="title-prod text-center" style="font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-size: 2rem">
+                Weekly best selling items
+            </h2>
+            <a href="{{ route('products') }}"
+                class="btn bg-white rounded-pill fw-bold text-decoration-none d-inline-flex align-items-center gap-2 px-4"
+                style="font-size:1rem; color:#7F2020;">
+                    See More
+                    <span class="rounded-circle d-flex justify-content-center align-items-center"
+                        style="width:35px; height:35px; background-color: #bddd09da">
+                        <i class="fa-solid fa-arrow-right text-white mt-1"></i>
+                    </span>
+            </a>
+        </div>
+        <div class="row justify-content-center g-4">
+            @foreach ($bestProducts as $pr)
+                <div class="col-12 col-md-4 mt-5 col-lg-3">
+                    <div class="card card-prod p-2 h-70" style="border-radius: 25px 25px 100px 100px;">
+                        <div class="img-prod" >
+                            <img src="{{  Storage::url('products/'.$pr->image_product) }}" class="img-set rounded-4 card-img-top shadow-lg">
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h3 class="card-title fw-bold text-truncate" >{{$pr->name_product}}</h3>
+                                <div class="ms-3">
+                                    <h6 class="fw-bold text-white rounded-pill px-3 py-2" style="background-color: #717f20">Rp. {{number_format($pr->price_product, 0, ',', '.')}}</h6>
+                                </div>
+                            </div>
+                            <p class="fw-bold">{{$pr->description}}</p>
+                            @if(Auth::check() && (Auth::user()->role === 'admin'))
+                                <p class="fw-bold">Stock: {{$pr->stock_product}}</p>
+                            @endif
+                            <div class="d-flex">
+                                @if (Auth::check() && (Auth::user()->role === 'admin'))
+                                    <button type="button" class="btn me-3" style="background-color: #FFFAF3; color:#7f2020" data-bs-toggle="modal" data-bs-target="#edit{{ $pr->id_product }}"><i class="fa-solid fa-arrows-rotate"></i></button>
+                                    <a href="#" class="btn btn-danger me-3" data-bs-toggle="modal" data-bs-target="#confirmDelete{{ $pr->id_product }}">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </a>
+                                @endif
+                            </div>
+                            @if (Auth::check() && (Auth::user()->role === 'user'))
+                                <form action="{{ route('addtoCart', ['idProduct' => $pr->id_product]) }}" method="POST" class="w-100">
+                                    @csrf
+                                    <button type="submit" class="btn w-100 text-white py-4 fw-bold" style="background-color: #717f20; border-radius: 0px 0px 100px 100px; transition:cubic-bezier(1, 0, 0, 1)"><i class="fa-solid fa-plus fa-2x"></i></button>
+                                </form>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @elseif (Auth::check() && auth()->user()->role === 'admin')
         <h2 class="mb-5 text-warning fw-bold" style="font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-size: 1.5rem">
             Recent Transaction..
         </h2>
@@ -313,7 +340,7 @@
         <h1 class="text-center fw-bold" style="font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">You can reach out us at..</h1>
         <div class="d-flex justify-content-center mt-5 w-100 gap-5 p-5 rounded-5">
             <div class="card card-map">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3963.613315541235!2d106.81191931225698!3d-6.570390493395543!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69c5ae0d5127e1%3A0x7e203c80069d2efb!2sWoodfire%20Bogor!5e0!3m2!1sen!2sid!4v1781592789637!5m2!1sen!2sid"
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3963.515413167111!2d106.79509701225706!3d-6.582666093383381!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69c4342fcb5a85%3A0xc819ef0d110b3254!2sGg.%20Lb.%20Pilar%2C%20Kota%20Bogor%2C%20Jawa%20Barat!5e0!3m2!1sen!2sid!4v1783566702796!5m2!1sen!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin">
                     width="800"
                     height="500"
                     style="border:0;"
