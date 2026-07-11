@@ -1,9 +1,9 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="container mt-5">
-    <div class="row mb-4 align-items-start">
-        <div class="col-md-4">
+<div class="container-fluid mt-5">
+    <div class="row">
+        <div class="col-lg-3">
             <a href="{{ route('historySales') }}"
                 class="btn rounded-pill"
                 style="background:#7F2020;color:#E6F082;">
@@ -14,7 +14,7 @@
                 View Order History
             </a>
         </div>
-        <div class="col-md-8">
+        <div class="col-lg-6">
             @if(empty(auth()->user()->address))
                 <div class="card shadow border-0">
                     <div class="card-body">
@@ -24,10 +24,10 @@
                             <textarea
                                 class="form-control mb-3"
                                 name="address"
-                                rows="4"
+                                rows="3"
                                 placeholder="Enter your complete address first..."
                                 required></textarea>
-                            <button class="btn btn-success" style="background:#7F2020;color:#E6F082">
+                            <button class="btn " style="background:#7F2020;color:#E6F082">
                                 Save Address
                             </button>
                         </form>

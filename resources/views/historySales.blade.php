@@ -17,6 +17,7 @@
             </a>
         </div>
     @else
+    <h6 class="fw-bold mb-5 text-center" style="color: #7F2020; font-size: 1.5rem">Transaction History</h6>
         @foreach($sales as $sale)
         <div class="card border-0 shadow-lg mb-4 p-4 rounded-4">
             <div class="card-body">
@@ -91,10 +92,10 @@
                     </div>
                     <div class="col-md-3 text-end">
                         <a href="#"
-                        class="btn btn-outline-success rounded-pill"
+                        class="btn  rounded-pill" style="background-color: #5A7ACD; color: white"
                         data-bs-toggle="modal"
                         data-bs-target="#detailModal{{ $sale->id_sale }}">
-                            <i class="fa-solid fa-eye me-2"></i> Detail
+                            <i class="fa-solid fa-eye"></i>
                         </a>
                         @if(Auth::check() && Auth::user()->role === 'user' && $sale->status == 'Processing')
                             <form action="{{ route('received', $sale->id_sale) }}"
@@ -140,6 +141,7 @@
                                 @endswitch
                             </div>
                         </div>
+                        <h6>Customer: {{ $sale->user->email }}</h6>
                         @foreach ($sale->details as $detail)
                             <div class="card shadow-sm border-0 rounded-4 mb-4">
                                 <div class="card-body">

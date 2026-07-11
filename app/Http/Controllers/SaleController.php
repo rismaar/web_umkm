@@ -16,8 +16,8 @@ class SaleController extends Controller
         if (empty(Auth::user()->address)) {
             return back()->with('error', 'Please fill in your shipping address first.');
         }
-        
-        $cart = cart::where('id_user', Auth::id())->first();
+
+        $cart = cart::where('id_user', '=', Auth::id(), 'and')->first();
         if (!$cart) {
             return back()->with('error', 'Cart is empty');
         }
@@ -50,7 +50,7 @@ class SaleController extends Controller
             $product->stock_product -= $item->qty;
             $product->save();
         }
-        cartItem::where('id_cart', $cart->id_cart)->delete();
+        cartItem::where('id_cart', '=', $cart->id_cart, 'and')->delete();
         return redirect()->route('historySales')->with('success','Checkout berhasil.');
     }
 
@@ -103,7 +103,7 @@ class SaleController extends Controller
         }
         $sale->status = 'Completed';
         $sale->save();
-        return redirect()->route('historySales')->with('success', 'Order marked as received.');
+        return redirect()->route('historySales')->with('success', 'Product has been received.');
 
     }
 }

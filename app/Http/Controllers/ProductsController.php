@@ -10,12 +10,26 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductsController extends Controller
 {
-    public function ProductsIndex(){
+    public function ProductsIndex(Request $request){
         $category = ProductCategory::all();
         if(Auth::check() && Auth::user()->role === 'admin'){
-            $products = Product::orderBy('id_product','asc')->paginate(15);
+            $products = Product::query();
+            if ($request->filled('search')) {
+                $products->where('name_product', 'like', '%' . $request->search . '%')->orWhere('description', 'like', '%' . $request->search . '%');
+            }
+            $products = $products
+                ->orderBy('id_product', 'asc')
+                ->paginate(10)
+                ->withQueryString();
         }else{
-            $products = Product::orderBy('created_at','desc')->paginate(10);
+            $products = Product::query();
+            if ($request->filled('search')) {
+                $products->where('name_product', 'like', '%' . $request->search . '%')->orWhere('description', 'like', '%' . $request->search . '%');;
+            }
+            $products = $products
+                ->orderBy('created_at', 'desc')
+                ->paginate(6)
+                ->withQueryString();
         }
         return view('products', compact('category', 'products'));
     }

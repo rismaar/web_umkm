@@ -18,7 +18,7 @@
     color: rgb(221, 123, 52);
 }
 .landing-bann{
-    padding: 30px;
+    padding: 20px;
 }
 .title{
     font-size: 12rem;
@@ -65,7 +65,8 @@
     color: #FBF5A7;
 }
 .about{
-    color: #7F2020;
+    color:#FBF5A7;
+    background-color: #7F2020;
 }
 .title-about{
     font-size: 5rem;

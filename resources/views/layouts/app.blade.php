@@ -13,7 +13,7 @@
     @vite(['resources/css/app.css'])
 </head>
 
-<body style="background-color: #FDFBEE" class="p-3">
+<body style="background-color: #FDFBEE; " class="p-3">
     <ul id="nav" class="navigation nav rounded-pill p-3 px-5 mt-3 shadow-lg justify-content-between sticky-top">
         <div class="d-flex mt-2">
             <li class="nav-item">
@@ -80,7 +80,7 @@
             @endif
             @if(!Auth::check())
                 <li class="nav-item">
-                    <a class="nav nav-tool btn rounded-pill fw-bold text-decoration-none p-2 px-4 border-0" href="{{ route('regist') }}" style="background-color: #7F2020; color: #FBF5A7">Sign Up</a>
+                    <a class=" nav-tool btn rounded-pill fw-bold text-decoration-none py-2 px-4 border-0" href="{{ route('regist') }}" style="background-color: #7F2020; color: #FBF5A7"><i class="fa-solid fa-user me-2 mt-2"></i> Sign Up</a>
                 </li>
             @endif
         </div>

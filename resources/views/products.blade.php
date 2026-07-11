@@ -44,11 +44,30 @@
                 </div>
             </div>
         </div>
-        <div class=" mt-5">
-            <h5 class="title-prod release">
-                New Release...
-            </h5>
+        <div class="d-flex justify-content-between px-5 mt-5">
+            <h6 class="fw-bold" style="color: #FBF5A7; font-size: 1.5rem">New Release..</h6>
+            <form action="{{ route('products') }}" method="GET" class="d-flex mb-2">
+                <input
+                    type="text"
+                    name="search"
+                    class="form-control rounded-pill me-2 py-4 border-0 px-4" style="width: 500px"
+                    placeholder="Search products..."
+                    value="{{ request('search') }}">
+                <button type="submit"
+                    class="btn rounded-circle px-4"
+                    style="color:#7F2020; background:#FBF5A7">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
         </div>
+        @if ($products->isEmpty())
+            <div class="d-flex justify-content-center align-items-center p-3 mt-5">
+                <div class="text-center">
+                    <i class="fa-solid fa-circle-exclamation fa-3x p-2" style="color: #ffffff"></i>
+                    <h2 class="text-center text-white">No products available.</h2>
+                </div>
+            </div>
+        @endif
     @endif
 
     @if (Auth::check() && auth()->user()->role === 'admin')
@@ -131,7 +150,7 @@
 
     <div class="row justify-content-center p-5">
         @foreach ($products as $pr)
-            <div class="col-12 col-md-4 mt-5 col-lg-3">
+            <div class="col-12 col-md-4 mt-3 col-lg-3">
                 <div class="card card-prod p-2 h-70" @if ((Auth::check() && Auth::user()->role === 'user'))
                                                         style="border-radius: 25px 25px 100px 100px;"
                                                      @else
@@ -191,31 +210,6 @@
                 </div>
             </div>
 
-            {{-- detail --}}
-            <div class="modal fade" id="staticBackdrop{{ $pr->id_product }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content p-4">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="staticBackdropLabel">{{$pr->name_product}}</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <img src="{{  Storage::url('products/'.$pr->image_product) }}" class="img-set card-img-top">
-                            <h2 class="fw-bold mt-4">Rp. {{number_format($pr->price_product, 2, ',', '.')}}</h2>
-                            <p class="card-text text-truncate">{{$pr->description}}</p>
-                            <p class="card-text">Tersedia {{$pr->stock_product}} Pcs</p>
-                        </div>
-                        @if (Auth::check() && (Auth::user()->role === 'user'))
-                            <div class="modal-footer d-block">
-                                <form action="{{ route('addtoCart', ['idProduct' => $pr->id_product]) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="btn w-100 rounded-5 p-3" style="background-color: #7f2020; color: #E6F082">Add to Cart<i class="fa-solid fa-cart-shopping mx-2"></i></button>
-                                </form>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
 
             {{-- edit --}}
             <div class="modal fade" id="edit{{ $pr->id_product }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

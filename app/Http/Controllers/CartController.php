@@ -33,7 +33,7 @@ class CartController extends Controller
     public function index(){
         $cart = Cart::where('id_user', '=', Auth::id(), 'and')->first();
         if ($cart) {
-            $items = CartItem::with('product')->where('id_cart', $cart->id_cart)->get();
+            $items = CartItem::with('product')->where('id_cart', '=', $cart->id_cart)->get();
             return view('cart', compact('items'));
         }
         return view('cart', ['items' => collect()]);
