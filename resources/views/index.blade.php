@@ -510,7 +510,7 @@
             
             <div>
                 <h4 class="fw-bold">Contact us:</h4>
-                <h4><i class="fa-brands fa-whatsapp me-2"></i>+62812-9077-4810</h4>
+                <h4><i class="fa-brands fa-whatsapp me-2"></i>+62851-5725-5981</h4>
                 <h4><i class="fa-solid fa-envelope"></i> Email: IdaStore@gmail.com</h4>
                 <h4><i class="fa-regular fa-clock me-2"></i>06.00 - 21.00 WIB</h4>
             </div>
